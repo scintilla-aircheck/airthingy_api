@@ -148,3 +148,5 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+### SQLite
+*.db
