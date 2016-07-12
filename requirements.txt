@@ -3,3 +3,4 @@ flask_restful
 peewee
 marshmallow
 nose2[coverage-plugin]
+simplejson
