@@ -26,3 +26,5 @@ class CreateSensorData(Schema):
 
 class GetSensorData(Schema):
     target = fields.String(validate=lambda t: t in _TARGETS)
+    offset = fields.Integer(default=0, validate=lambda n: n >= 0)
+    limit = fields.Integer(default=100, validate=lambda n: n > 0)

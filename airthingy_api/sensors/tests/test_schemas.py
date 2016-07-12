@@ -93,3 +93,16 @@ class GetSensorDataTestCase(unittest.TestCase):
         form_data = {'target': 'BAD_TARGET'}
         result = self.schema.load(form_data)
         self.assertIn('target', result.errors)
+
+    def test_offset_default_zero(self):
+        form_data = {'target': 'SO2'}
+        result = self.schema.load(form_data)
+        offset = result.data['offset']
+        self.assertEqual(0, offset)
+
+    def test_limit_default_zero(self):
+        form_data = {'target': 'SO2'}
+        result = self.schema.load(form_data)
+        offset = result.data['limit']
+        self.assertEqual(100, offset)
+

@@ -1,1 +1,1 @@
-from . import schemas, models
+from . import schemas, models, resources
