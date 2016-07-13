@@ -44,14 +44,16 @@ class IModelResource(frest.Resource):
         Returns validated request parameters based on the method type.
         """
         request = flask.request
-        raw_data = request.args if request.method == 'GET' \
-            else request.get_json()
+
+        # Get raw params from URI arguments or JSON body, convert 'None' to dict
+        raw_params = request.args if request.method == 'GET' \
+            else request.get_json() or {}
 
         if self.schema:
-            clean_data = self.schema.load(raw_data)
+            clean_data = self.schema.load(raw_params)
             return clean_data.data, clean_data.errors
         else:
-            return raw_data, {}
+            return raw_params, {}
 
     def post(self):
         flask.abort(405)
