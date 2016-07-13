@@ -1,8 +1,8 @@
-from peewee import Model
+import peewee
 
 from . import database
 
 
-class BaseModel(Model):
+class BaseModel(peewee.Model):
     class Meta(object):
         database = database

@@ -1,5 +1,6 @@
-from flask import request, abort, jsonify
-from flask_restful import Resource
+import flask
+import flask_restful as frest
+
 from playhouse.shortcuts import model_to_dict
 
 from . import schemas, models
@@ -8,7 +9,7 @@ from . import schemas, models
 _TARGETS = [t[0] for t in models.TARGETS]
 
 
-class SensorData(Resource):
+class SensorData(frest.Resource):
     """`/api/{version}/data/"""
 
     _MODEL = models.SensorDataPoint
@@ -23,7 +24,7 @@ class SensorData(Resource):
         """
         data, errors = self.sanitize_data(schemas.CreateSensorData)
         if errors:
-            abort(400)
+            flask.abort(400)
         else:
             data_points = data.pop('data')
             for data_point in data_points:
@@ -37,11 +38,11 @@ class SensorData(Resource):
         """
         Query existing sensor data points.
         """
-        raw_data = request.args
+        raw_data = flask.request.args
         schema = schemas.GetSensorData()
         schema_out = schema.load(raw_data)
         if schema_out.errors:
-            abort(400)
+            flask.abort(400)
 
         target = schema_out.data.get('target')
         if target:
@@ -49,7 +50,7 @@ class SensorData(Resource):
         else:
             results = [model_to_dict(d) for d in self._cursor]
 
-        return jsonify(results)
+        return flask.jsonify(results)
 
     @staticmethod
     def sanitize_data(schema, **kwargs):
@@ -60,10 +61,10 @@ class SensorData(Resource):
         :param schema: A schema class
         :return: A two-tuple containing data and form errors
         """
-        if request.method == 'GET':
-            raw_data = request.args
+        if flask.request.method == 'GET':
+            raw_data = flask.request.args
         else:
-            raw_data = request.get_json()
+            raw_data = flask.request.get_json()
         schema = schema(**kwargs)
         schema_output = schema.load(raw_data)
         return schema_output.data, schema_output.errors

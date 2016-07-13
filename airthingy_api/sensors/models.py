@@ -1,10 +1,6 @@
-from airthingy_api import models
+import peewee
 
-from peewee import (
-    DateTimeField,
-    CharField,
-    DecimalField
-)
+from airthingy_api import models
 
 
 TARGETS = (
@@ -28,9 +24,9 @@ UNITS = (
 
 
 class SensorDataPoint(models.BaseModel):
-    datetime = DateTimeField()
-    latitude = DecimalField(decimal_places=6)
-    longitude = DecimalField(decimal_places=6)
-    target = CharField(choices=TARGETS)
-    unit = CharField(choices=UNITS)
-    value = DecimalField(decimal_places=6)
+    datetime = peewee.DateTimeField()
+    latitude = peewee.DecimalField(decimal_places=6)
+    longitude = peewee.DecimalField(decimal_places=6)
+    target = peewee.CharField(choices=TARGETS)
+    unit = peewee.CharField(choices=UNITS)
+    value = peewee.DecimalField(decimal_places=6)
