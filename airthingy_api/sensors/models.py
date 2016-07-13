@@ -1,6 +1,6 @@
 import peewee
 
-from airthingy_api import models
+from airthingy_api import models, exceptions
 
 
 TARGETS = (
@@ -30,3 +30,14 @@ class SensorDataPoint(models.BaseModel):
     target = peewee.CharField(choices=TARGETS)
     unit = peewee.CharField(choices=UNITS)
     value = peewee.DecimalField(decimal_places=6)
+
+    def validate(self):
+        # Validate target
+        if self.target not in [t[0] for t in TARGETS]:
+            msg = '\'{}\' is not a valid target'
+            raise exceptions.ValidationError(msg.format(self.target))
+        
+        # Validate unit
+        if self.unit not in [u[0] for u in UNITS]:
+            msg = '\'{}\' is not a valid unit'
+            raise exceptions.ValidationError(msg.format(self.unit))
