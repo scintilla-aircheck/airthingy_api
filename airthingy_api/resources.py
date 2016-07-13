@@ -46,6 +46,7 @@ class IModelResource(frest.Resource):
         request = flask.request
         raw_data = request.args if request.method == 'GET' \
             else request.get_json()
+
         if self.schema:
             clean_data = self.schema.load(raw_data)
             return clean_data.data, clean_data.errors

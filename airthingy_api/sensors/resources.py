@@ -1,4 +1,5 @@
 import flask
+import peewee
 
 from airthingy_api import resources
 
@@ -23,8 +24,8 @@ class Sensors(resources.IModelResource):
         if errors:
             return errors, 400
 
-        self.model.create(**params)
-        return None, 204
+        sensor = self.model.create(**params)
+        return flask.jsonify(sensor.serialize()), 204
 
     def get(self):
         params, errors = self.get_params()
@@ -40,6 +41,37 @@ class Sensors(resources.IModelResource):
 
         return flask.jsonify(results)
 
+
+class SensorDetail(resources.IModelResource):
+
+    _MODEL = models.Sensor
+
+    _SCHEMAS = {
+        'PUT': schemas.UpdateSensor(),
+    }
+
+    def get(self, sensor):
+        try:
+            sensor = self.model.get(slug=sensor)
+        except peewee.DoesNotExist:
+            flask.abort(404)
+
+        return flask.jsonify(sensor.serialize())
+
+    def put(self, sensor):
+        params, errors = self.get_params()
+
+        if errors:
+            return errors, 400
+
+        result = self.model.update(**params).where(
+            self.model.slug == sensor).execute()
+
+        if result:
+            return None, 204
+
+        else:
+            flask.abort(404)
 
 
 class SensorData(resources.IModelResource):
