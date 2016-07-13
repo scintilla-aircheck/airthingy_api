@@ -1,6 +1,29 @@
 import unittest
 
 
+class CreateSensorTestCase(unittest.TestCase):
+
+    def setUp(self):
+        from ..schemas import CreateSensor
+        self.schema = CreateSensor()
+
+    def test_invalid_slug_raises_exception(self):
+        sensor_data = {
+            'slug': 'Invalid Slug!',
+            'name': 'Inovafit SDS-021',
+            'target': 'DUST'}
+        result = self.schema.load(sensor_data)
+        self.assertIn('slug', result.errors)
+
+    def test_invalid_target_raises_exception(self):
+        sensor_data = {
+            'slug': 'INOVAFIT_SDS_021',
+            'name': 'Inovafit SDS-021',
+            'target': 'BAD_TARGET'}
+        result = self.schema.load(sensor_data)
+        self.assertIn('target', result.errors)
+
+
 class CreateSensorDataPointTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -83,11 +106,11 @@ class CreateSensorDataTestCase(unittest.TestCase):
         self.assertIn('data', result.errors)
 
 
-class GetSensorDataTestCase(unittest.TestCase):
+class RetrieveSensorDataTestCase(unittest.TestCase):
 
     def setUp(self):
-        from ..schemas import GetSensorData
-        self.schema = GetSensorData()
+        from ..schemas import RetrieveSensorData
+        self.schema = RetrieveSensorData()
 
     def test_invalid_target_fails_validation(self):
         form_data = {'target': 'BAD_TARGET'}

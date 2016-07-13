@@ -17,4 +17,5 @@ def _db_close(exc):
 
 
 # Connect resources with respective endpoints
-api.add_resource(sensors.resources.SensorData, '/data/', endpoint='get')
+api.add_resource(sensors.resources.Sensors, '/sensors/')
+api.add_resource(sensors.resources.SensorData, '/data/')

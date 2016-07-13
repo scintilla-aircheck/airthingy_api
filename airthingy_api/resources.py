@@ -14,7 +14,7 @@ class IModelResource(frest.Resource):
     # A data model for this resource
     _MODEL = NotImplemented
 
-    # A dict of schemas for each method
+    # A dict of schemas for table-level methods
     _SCHEMAS = {
         'POST': NotImplemented,
         'GET': NotImplemented,
@@ -28,7 +28,7 @@ class IModelResource(frest.Resource):
         Provides a read-only reference to the data model.
         """
         return self._MODEL
-    
+
     @property
     def schema(self):
         return self._SCHEMAS[flask.request.method]
@@ -46,7 +46,11 @@ class IModelResource(frest.Resource):
         request = flask.request
         raw_data = request.args if request.method == 'GET' \
             else request.get_json()
-        return self.schema.load(raw_data)
+        if self.schema:
+            clean_data = self.schema.load(raw_data)
+            return clean_data.data, clean_data.errors
+        else:
+            return raw_data, {}
 
     def post(self):
         flask.abort(405)
