@@ -8,4 +8,4 @@ app = Flask(__name__)
 api = Api(app)
 
 # Configure database
-database = SqliteDatabase('airthingy.db')
+database = SqliteDatabase(None)

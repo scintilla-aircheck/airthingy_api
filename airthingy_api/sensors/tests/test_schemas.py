@@ -7,7 +7,7 @@ class CreateSensorTestCase(unittest.TestCase):
         from ..schemas import CreateSensor
         self.schema = CreateSensor()
 
-    def test_invalid_slug_raises_exception(self):
+    def test_invalid_slug_fails_validation(self):
         sensor_data = {
             'slug': 'Invalid Slug!',
             'name': 'Inovafit SDS-021',
@@ -15,7 +15,7 @@ class CreateSensorTestCase(unittest.TestCase):
         result = self.schema.load(sensor_data)
         self.assertIn('slug', result.errors)
 
-    def test_invalid_target_raises_exception(self):
+    def test_invalid_target_fails_validation(self):
         sensor_data = {
             'slug': 'INOVAFIT_SDS_021',
             'name': 'Inovafit SDS-021',
@@ -31,13 +31,13 @@ class CreateSensorDataPointTestCase(unittest.TestCase):
         self.schema = CreateSensorDataPoint()
         self.form_data = {
             'unit': 'PPM',
-            'target': 'SO2',
+            'sensor': 'SPEC_SO2_20PPM',
             'value': 12.345}
 
-    def test_target_required(self):
-        self.form_data.pop('target')
+    def test_sensor_required(self):
+        self.form_data.pop('sensor')
         result = self.schema.load(self.form_data)
-        self.assertIn('target', result.errors)
+        self.assertIn('sensor', result.errors)
 
     def test_unit_required(self):
         self.form_data.pop('unit')
@@ -48,11 +48,6 @@ class CreateSensorDataPointTestCase(unittest.TestCase):
         self.form_data.pop('value')
         result = self.schema.load(self.form_data)
         self.assertIn('value', result.errors)
-
-    def test_invalid_target_fails_validation(self):
-        self.form_data['target'] = 'BAD_TARGET'
-        result = self.schema.load(self.form_data)
-        self.assertIn('target', result.errors)
 
     def test_invalid_unit_fails_validation(self):
         self.form_data['unit'] = 'BAD_UNIT'

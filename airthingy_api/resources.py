@@ -55,14 +55,14 @@ class IModelResource(frest.Resource):
         else:
             return raw_params, {}
 
-    def post(self):
+    def post(self, *args, **kwargs):
         flask.abort(405)
 
-    def get(self):
+    def get(self, *args, **kwargs):
         flask.abort(405)
 
-    def put(self):
+    def put(self, *args, **kwargs):
         flask.abort(405)
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         flask.abort(405)

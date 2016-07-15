@@ -24,8 +24,12 @@ class Sensors(resources.IModelResource):
         if errors:
             return errors, 400
 
-        sensor = self.model.create(**params)
-        return flask.jsonify(sensor.serialize()), 204
+        try:
+            sensor = self.model.create(**params)
+        except peewee.IntegrityError as err:
+            return {'sensor': str(err)}, 400
+
+        return flask.jsonify(sensor.serialize())
 
     def get(self):
         params, errors = self.get_params()

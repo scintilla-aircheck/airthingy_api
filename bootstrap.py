@@ -1,12 +1,19 @@
+import os
 import peewee
-
-from airthingy_api import sensors
+import airthingy_api
 
 
 _models = (
-    sensors.models.Sensor,
-    sensors.models.SensorDataPoint,
+    airthingy_api.sensors.models.Sensor,
+    airthingy_api.sensors.models.SensorDataPoint,
 )
 
 
-peewee.create_model_tables(_models)
+def bootstrap(db=None):
+    db = db or os.environ.get('TEST_DB_URI', 'airthingy.db')
+    airthingy_api.database.init(db)
+    peewee.create_model_tables(_models)
+
+
+if __name__ == '__main__':
+    bootstrap()
